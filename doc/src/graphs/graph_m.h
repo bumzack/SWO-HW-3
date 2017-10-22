@@ -4,6 +4,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 struct Graph;
 typedef struct Graph { 
@@ -11,7 +12,7 @@ typedef struct Graph {
     double *edges;
  } Graph;
  
- 
+
 Graph* create(int n);
 void destroy(Graph *g);
 void insertEdge(Graph *g, int source, int target, double weight);
@@ -31,6 +32,7 @@ Graph* create(int n){
 
 void destroy(Graph *g){
     free(g->edges);
+    g->edges = NULL;
     free(g);
     g = NULL;
 }
@@ -49,6 +51,10 @@ void removeEdge(Graph *g, int source, int target){
 
 
 void print(Graph *g){
+    if (g == NULL){
+        printf("Graph is Empty. Please create a new one.");
+        exit(1);
+    }
     int matrixSize = g->size;
     printf("Adjacency Matrix:\n\n");
 
