@@ -1,7 +1,9 @@
+#ifndef GRAPH_M
+#define GRAPH_M
+
+
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
-
 
 struct Graph;
 typedef struct Graph { 
@@ -9,8 +11,7 @@ typedef struct Graph {
     double *edges;
  } Graph;
  
-
-
+ 
 Graph* create(int n);
 void destroy(Graph *g);
 void insertEdge(Graph *g, int source, int target, double weight);
@@ -29,7 +30,9 @@ Graph* create(int n){
 }
 
 void destroy(Graph *g){
-
+    free(g->edges);
+    free(g);
+    g = NULL;
 }
 
 void insertEdge(Graph *g, int source, int target, double weight){
@@ -61,27 +64,13 @@ void print(Graph *g){
         for(int j = 0; j < matrixSize; j++){
             printf("\t%.2f", g->edges[i * g->size + j] );
         }
+        printf("\n");
     }
 }
 
-int main(void) {
-    Graph* Test1;
-    Test1 = create(6);
-    insertEdge(Test1, 1, 2, 1);
-    insertEdge(Test1, 1, 6, 1);
-    insertEdge(Test1, 2, 3, 1);
-    insertEdge(Test1, 2, 6, 1);
-    insertEdge(Test1, 3, 4, 1);
-    insertEdge(Test1, 3, 5, 1);
-    insertEdge(Test1, 4, 5, 1);
-    insertEdge(Test1, 5, 6, 1);
-    insertEdge(Test1, 6, 3, 1);
 
-    print(Test1);
 
-    return 0;
-  }
-
+#endif
 
 
 

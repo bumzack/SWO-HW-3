@@ -1,6 +1,6 @@
 #file: geo/Makefile.simple
 
-PROGRAM = graph_m
+PROGRAM = graph
 ARGUMENTS = #empty
 
 CC = gcc
@@ -14,7 +14,7 @@ CFILES = $(wildcard *.c) #all c. files
 OFILES = $(CFILES:.c=.o) # generate corresponding .o files
 
 # new default target
-all: clean depend $(PROGRAM)
+all: clean depend $(PROGRAM) run
 
 # first rule is default
 $(PROGRAM): $(OFILES)
