@@ -46,6 +46,7 @@ void initIndex(Graph *g){
     }
 }
 
+// hier brauchst du Graph **g, damit das g= NULL an den Aufrufer zurück kommt
 void destroy(Graph *g){
     free(g->Index);
     g->index = NULL;
@@ -68,6 +69,7 @@ Node* createNode(Graph *g, int value, double weight){
     n->nodeNumber = value;
     n->weight = weight;
     n->next = NULL;
+    return n;
 }
 
 
