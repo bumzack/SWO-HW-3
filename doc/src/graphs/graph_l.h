@@ -39,7 +39,7 @@ Graph* create(int n){
 }
 
 void initIndex(Graph *g){
-    for(int i = 0; i < size; i++){
+    for(int i = 0; i < g->size; i++){
         g->index[i]->nodeNumber = i;
         g->index[i]->weight = 0;
         g->index[i]->next = NULL;
@@ -55,7 +55,7 @@ void destroy(Graph *g){
 Node* findSource(Graph *g, int source){
     for(int i = 0; i < g->size; i++){
         if(g->index[i]->nodeNumber == source ){
-            return g->index[i]
+            return g->index[i];
         }
     }    
     if(g->index[i]->nodeNumber != source){
@@ -70,8 +70,8 @@ Node* createNode(Graph *g, int value, double weight){
     n->next = NULL;
 }
 
-/// TODO COMPLETE FINDNOTE + INSERTNODE
-Node* findNode(Graph *g, int source, int request){
+
+Node* findNode(Graph *g, int source, int target){
     Node* help = g->index[source];
 
     while(help->next != NULL && help->nodeNumber != target){
@@ -84,34 +84,55 @@ Node* findNode(Graph *g, int source, int request){
     }
 }
 
-void insertNode(Graph *g, Node *n){
-
-}
-
 void insertEdge(Graph *g, int source, int target, double weight){
-    //find sourceNode
-    Node* s;
     Node* n = NULL;
-    s = findSource(g, source);
-    if (findNode(g,source,target) == NULL){
-        n = createNode(g, target, weight);
-        insertNode(g, n);
-    }
+    n = createNode(g, target, weight);
     
     //insert target
-    Node* help = NULL;
-    while(s->next != NULL && s->next->nodeNumber < target){
-        help = s->next;
+    Node* help = g->index[source];
+    Node* pHelp = NULL;
+    while(help->next != NULL && help->next->nodeNumber <= target){
+        pHelp = help;
+        help = help->next;
     }
-    
+    if(help->next == NULL){
+        help->next = n; 
+    } else if(help->nodeNumber < target){
+        pHelp->next = n;
+        n->next = help->next;
+    } else if(help->nodeNumber == target){
+        help->weight = weight;        
+    }
 }
 
 double getWeight(Graph *g, int source, int target){
-    return g->edges[source * g->size + target];
+    Node* n;
+    n = findNode(g,source,target);
+    if(n != NULL){
+        return n->weight;
+    } else {
+        printf("There is no edge from %d to %d\n", source, target);
+        return 0;
+    }
 }
 
+
 void removeEdge(Graph *g, int source, int target){
-    g->edges[source * g->size + target] = 0;
+    Node* pHelp = findSource(g, source); 
+    Node* help = pHelp->next;   
+    while(help != NULL && help->nodeNumber != target){
+        pHelp = help;
+        help = help->next;
+    }
+    if(help == NULL){
+        printf("There is no edge from %d to %d\n", source, target);
+    } else {
+        pHelp->next = help->next;
+        help->next = NULL;
+        free(help);
+        help = NULL;
+        printf("Removed edge from %d to %d\n", source, target);
+    }
 }
 
 
@@ -120,20 +141,22 @@ void print(Graph *g){
         printf("Graph is Empty. Please create a new one.");
         exit(1);
     }
-    int matrixSize = g->size;
-    printf("Adjacency Matrix:\n\n");
+    int graphSize = g->size;
+    printf("Adjacency List:\n\n");
 
     /*print header*/
-    for(int i = 0; i < matrixSize; i++){ 
+    for(int i = 0; i < graphSize; i++){ 
         printf("\t%d", i);
     }
     printf("\n");
 
     /*print values*/
-    for(int i = 0; i < matrixSize; i++){
+    for(int i = 0; i < graphSize; i++){
         printf("%d", i);
-        for(int j = 0; j < matrixSize; j++){
-            printf("\t%.2f", g->edges[i * g->size + j] );
+
+        Node* help = g->index[i]->next;
+        while(help != NULL){
+            printf("\t%.2f", help->nodeNumber);
         }
         printf("\n");
     }
