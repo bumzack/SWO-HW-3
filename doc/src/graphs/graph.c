@@ -35,9 +35,9 @@ int main(void) {
     removeEdge(Test1, 0, 1);
     printf("weight should not be found: %.2f\n", getWeight(Test1, 0,1));
     
-    destroy(Test1);
+    //destroy(Test1);
     
-    print(Test1);
+    //print(Test1);
 
     return 0;
 }

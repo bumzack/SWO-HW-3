@@ -1,1 +1,1 @@
-graph_m.o: graph_m.c
+graph.o: graph.c GRAPH_L.h
