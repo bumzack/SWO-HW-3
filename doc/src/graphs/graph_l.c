@@ -41,16 +41,12 @@ void destroy(Graph **g){
 }
 
 Node* findSource(Graph *g, int source){
-    return g->index[source].next;
-    
-    /*for(int i = 0; i < g->size; i++){
-        if(g->index[i].nodeNumber == source ){
-            return g->index[i].next; /////////////////// why?
-        }
-    }    
-    if(g->index[i].nodeNumber != source){
+    if(source > 0 || source < g->size){
+        return g->index[source].next;
+    } else {
+        printf("Error:\tSource node not part of graph.\n");
         return NULL;
-    }*/
+    }
 }
 
 Node* createNode(int value, double weight){
@@ -66,8 +62,17 @@ Node* createNode(int value, double weight){
     return n;
 }
 
+void valueCheck(Graph *g, int source, int target){
+    if(source < 0) { printf("Error:\tSource node not part of graph.\n"); exit(1); }
+    if(source > g->size-1) { printf("Error:\tSource node not part of graph.\n"); exit(2); }
+    if(target < 0) { printf("Error:\tSource node not part of graph.\n"); exit(3); }
+    if(target > g->size-1) { printf("Error:\tTarget node not part of graph.\n"); exit(4);}
+}
 
 Node* findNode(Graph *g, int source, int target){
+    printf("finding Node\n");
+    valueCheck(g, source, target);
+
     Node* help = g->index[source].next;
 
     while(help != NULL && help->nodeNumber != target){
@@ -80,31 +85,38 @@ Node* findNode(Graph *g, int source, int target){
     }
 }
 
+
+
 void insertEdge(Graph *g, int source, int target, double weight){
     printf("'insertEdge'\n");
-    printf("address of g = %p\n", (void *)g);
-
-    Node* n = NULL;    
-    n = createNode(target, weight);
+   // printf("address of g = %p\n", (void *)g);
+    valueCheck(g, source, target);
+    //if (source > g->size-1) {printf("whats wrong with you\?");exit(1);}
     
-    //insert target
+    Node* n = createNode(target, weight);
     Node* help = g->index[source].next;
-    Node* pHelp = NULL;
-    while(help != NULL && help->nodeNumber <= target) {
-        pHelp = help;
-        help = help->next;
-    }
-    if(help == NULL){
-        help->next = n; 
-    } else if(help->nodeNumber < target){
-        pHelp->next = n;
-        n->next = help->next;
-    } else if(help->nodeNumber == target){
-        help->weight = weight;        
+    Node* pHelp = help; // wie kann ich hier auf g->index[source] zeigen und nicht auf das nächste element?
+
+    if(help == NULL) {
+        g->index[source].next = n; 
+    } else {
+        while(help != NULL && help->nodeNumber < target) {
+            pHelp = help;
+            help = help->next;
+        }
+        if(help == NULL){
+            pHelp->next = n; 
+        } else if(help->nodeNumber == target){  //overwrite existing weight
+            help->weight = weight;        
+        } else if(help->nodeNumber < target){
+            pHelp->next = n;
+            n->next = help->next;
+        }
     }
 }
 
 double getWeight(Graph *g, int source, int target){
+    valueCheck(g, source, target);
     Node* n;
     n = findNode(g,source,target);
     if(n != NULL){
@@ -117,6 +129,7 @@ double getWeight(Graph *g, int source, int target){
 
 
 void removeEdge(Graph *g, int source, int target){
+    valueCheck(g, source, target);
     Node* pHelp = findSource(g, source); 
     Node* help = pHelp->next;   
     while(help != NULL && help->nodeNumber != target){
@@ -137,19 +150,20 @@ void removeEdge(Graph *g, int source, int target){
 
 void print(Graph *g){
     if (g == NULL){
-        printf("Graph is Empty. Please create a new one.");
+        printf("Graph is Empty. Please create a new one.\n");
         exit(1);
     }
     int graphSize = g->size;
-    printf("Adjacency List:\n\n");
+    printf("Adjacency List:\n");
 
     /*print values*/
     for(int i = 0; i < graphSize; i++){
-        printf("%d |", i);
+        printf("%d | ", i);
 
         Node* help = g->index[i].next;
         while(help != NULL){
-            printf("\t%d, %.2f", help->nodeNumber, help->weight);
+            printf("%d/%.1f\t", help->nodeNumber, help->weight);
+            help = help->next;
         }
         printf("\n");
     }
