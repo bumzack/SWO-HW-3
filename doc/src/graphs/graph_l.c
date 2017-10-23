@@ -88,14 +88,24 @@ Node* findNode(Graph *g, int source, int target){
 
 
 void insertEdge(Graph *g, int source, int target, double weight){
-    printf("'insertEdge'\n");
+    printf("'insertEdge  HALLO'\n");
    // printf("address of g = %p\n", (void *)g);
     valueCheck(g, source, target);
     //if (source > g->size-1) {printf("whats wrong with you\?");exit(1);}
     
     Node* n = createNode(target, weight);
     Node* help = g->index[source].next;
-    Node* pHelp = help; // wie kann ich hier auf g->index[source] zeigen und nicht auf das nächste element?
+    Node* pHelp = &(g->index[source]); // wie kann ich hier auf g->index[source] zeigen und nicht auf das nächste element?
+    
+    printf("address of g = %p\n", (void *)g);
+    printf("address of g->index = %p\n", (void *)(g->index));
+
+    for (int i = 0; i <= g->size; i++) {
+        printf("address of g->index[%d] = %p\n", i, (void *)(&(g->index[i])));    
+    }
+    printf("address of help = %p\n", (void *)help);
+    printf("address of pHelp = %p    ---  should be equal to %p\n", (void *)pHelp, (void *)(&(g->index[source])));
+
 
     if(help == NULL) {
         g->index[source].next = n; 
