@@ -22,7 +22,7 @@ typedef struct Graph {
 
 Graph* create(int n);
 void initIndex(Graph *g);
-void destroy(Graph *g);
+void destroy(Graph **g);
 void insertEdge(Graph *g, int source, int target, double weight);
 double getWeight(Graph *g, int source, int target);
 void removeEdge(Graph *g, int source, int target);
@@ -40,42 +40,46 @@ Graph* create(int n){
 
 void initIndex(Graph *g){
     for(int i = 0; i < g->size; i++){
-        g->index[i]->nodeNumber = i;
-        g->index[i]->weight = 0;
-        g->index[i]->next = NULL;
+        g->index[i].nodeNumber = i;
+        g->index[i].weight = 0;
+        g->index[i].next = NULL;
     }
 }
 
-void destroy(Graph *g){
-    free(g->Index);
-    g->index = NULL;
+void destroy(Graph **g){
+  /*  free(*(g->index));
+    *(g->index) = NULL;
     free(g);
-    g = NULL;
+    *g = NULL;*/
 }
+
 Node* findSource(Graph *g, int source){
-    for(int i = 0; i < g->size; i++){
-        if(g->index[i]->nodeNumber == source ){
-            return g->index[i];
+    return g->index[source].next;
+    
+    /*for(int i = 0; i < g->size; i++){
+        if(g->index[i].nodeNumber == source ){
+            return g->index[i].next; /////////////////// why?
         }
     }    
-    if(g->index[i]->nodeNumber != source){
+    if(g->index[i].nodeNumber != source){
         return NULL;
-    }
+    }*/
 }
 
-Node* createNode(Graph *g, int value, double weight){
-    Node* n;
+Node* createNode(int value, double weight){
+    Node* n = NULL;
     n->nodeNumber = value;
     n->weight = weight;
     n->next = NULL;
+    return n;
 }
 
 
 Node* findNode(Graph *g, int source, int target){
-    Node* help = g->index[source];
+    Node* help = g->index[source].next;
 
-    while(help->next != NULL && help->nodeNumber != target){
-        help = g->index[source]->next;
+    while(help != NULL && help->nodeNumber != target){
+        help = help->next;
     }
     if(help->nodeNumber == target){
         return help;
@@ -86,16 +90,16 @@ Node* findNode(Graph *g, int source, int target){
 
 void insertEdge(Graph *g, int source, int target, double weight){
     Node* n = NULL;
-    n = createNode(g, target, weight);
+    n = createNode(target, weight);
     
     //insert target
-    Node* help = g->index[source];
+    Node* help = g->index[source].next;
     Node* pHelp = NULL;
-    while(help->next != NULL && help->next->nodeNumber <= target){
+    while(help != NULL && help->nodeNumber <= target){
         pHelp = help;
         help = help->next;
     }
-    if(help->next == NULL){
+    if(help == NULL){
         help->next = n; 
     } else if(help->nodeNumber < target){
         pHelp->next = n;
@@ -144,26 +148,17 @@ void print(Graph *g){
     int graphSize = g->size;
     printf("Adjacency List:\n\n");
 
-    /*print header*/
-    for(int i = 0; i < graphSize; i++){ 
-        printf("\t%d", i);
-    }
-    printf("\n");
-
     /*print values*/
     for(int i = 0; i < graphSize; i++){
-        printf("%d", i);
+        printf("%d |", i);
 
-        Node* help = g->index[i]->next;
+        Node* help = g->index[i].next;
         while(help != NULL){
-            printf("\t%.2f", help->nodeNumber);
+            printf("\t%d, %.2f", help->nodeNumber, help->weight);
         }
         printf("\n");
     }
 }
-
-
-
 
 #endif
 
