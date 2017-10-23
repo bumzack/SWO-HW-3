@@ -9,8 +9,6 @@ int main(void) {
     Test1 = create(6);
     printf("address of test1 = %p  (should NOT be null)\n", (void *)Test1);
 
-
-   
     printf("insert edge 1\n"); insertEdge(Test1, 0, 1, 1);
     printf("insert edge 2\n"); insertEdge(Test1, 0, 5, 1);
     printf("insert edge 5\n"); insertEdge(Test1, 2, 3, 5);
@@ -26,11 +24,14 @@ int main(void) {
     
     print(Test1); 
     
-    printf("This Test should fail:"); getWeight(Test1, 5, 1);
-
-    removeEdge(Test1, 2, 3);
+    printf("This Test should fail: "); getWeight(Test1, 5, 1);
+    printf("Remove edge from 2 to 3:\n"); removeEdge(Test1, 2, 3);
+    printf("Remove edge from 2 to 4:\n"); removeEdge(Test1, 2, 4);
+    printf("Remove edge from 6 to 2 (should create error):\n"); removeEdge(Test1, 6, 2);
 
     print(Test1); 
+
+    destroy(Test1);
 
     return 0;
 }

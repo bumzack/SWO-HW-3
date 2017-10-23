@@ -33,11 +33,32 @@ void initIndex(Graph *g){
     }
 }
 
-void destroy(Graph **g){
+void destroy(Graph *g){
+    printf("Destroying\n");
+    /* Delete all nodes */
+    for(int i = 0; i < g->size; i++){
+        Node* head = &(g->index[i]);
+        Node* temp = head->next;
+        while(head->next != NULL){
+            printf("Del. %d temp-Node: %d\n", i, temp->nodeNumber);
+            /// TO DO____FUNKTIONIERT NICHT
+            
+            temp = head->next;
+            head->next = temp->next;
+            temp->next = NULL;
+            free(temp);
+            temp = head->next;
+        }
+    }
+    printf("Nodes deleted.\n");
+
+    /* Delete graph */
+    /*
     free((*g)->index);
     (*g)->index = NULL;
     free(g);
     *g = NULL;
+    */
 }
 
 Node* findSource(Graph *g, int source){
@@ -150,25 +171,46 @@ double getWeight(Graph *g, int source, int target){
 
 
 void removeEdge(Graph *g, int source, int target){
-
-    if(valueCheck(g, source, target)){
-        Node* pHelp = findSource(g, source); 
-        if (pHelp != NULL){
-            Node* help = pHelp->next;   
-            while(help != NULL && help->nodeNumber != target){
-                pHelp = help;
-                help = help->next;
+    if (valueCheck(g, source, target)){
+        printf("remove check passed\n");
+        Node* head = &(g->index[source]);
+        Node* temp = head;
+        Node* temp2 = head;
+        
+        if( temp->next == NULL){ // List is empty
+            printf("Edge from %d to %d could not been found\n", source, target);
+        } else {
+            printf("bfwhile nodeNumber %d\n", temp->nodeNumber);
+            while(temp != NULL && temp->nodeNumber < target){
+                temp2 = temp;
+                temp = temp->next;
+                printf("nodeNumber %d\n", temp->nodeNumber);
             }
-            if(help == NULL){
-                printf("There is no edge from %d to %d\n", source, target);
+            if(temp == NULL){ //remove at the end;
+                printf("Edge from %d to %d could not been found\n", source, target);
             } else {
-                pHelp->next = help->next;
-                help->next = NULL;
-                free(help);
-                help = NULL;
-                printf("Removed edge from %d to %d\n", source, target);
+                if(temp->nodeNumber < target && temp2 == head){ //remove at the beginning of the list
+                    printf("remove at begin\n");
+                    head->next = temp->next;
+                    temp->next = NULL;
+                    free(temp);
+                }  
+                if(temp->nodeNumber < target){ //remove in the middle
+                    printf("remove in middle\n");
+                    temp2->next = temp->next;
+                    temp->next = NULL;
+                    free(temp);
+                }
+                if (temp->nodeNumber == target){ //remove the node
+                    printf("overwriting\n");
+                    temp2->next = temp->next;
+                    temp->next = NULL;
+                    free(temp);
+                }
             }
-        }  
+        }
+    } else {
+        printf("Error while removing node.\n");
     }
 }
 
