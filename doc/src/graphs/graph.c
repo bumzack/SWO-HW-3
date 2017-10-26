@@ -1,5 +1,6 @@
 //#include "GRAPH_M.h"
 #include "graph.h"
+#include "graph_algs.h"
 
 int main(void) {
     Graph* Test1 = NULL;
@@ -30,11 +31,20 @@ int main(void) {
     printf("Remove edge from 2 to 4:\n"); removeEdge(Test1, 2, 4);
     printf("Remove edge from 6 to 2 (should create error):\n"); removeEdge(Test1, 6, 2);
 
+    printf("Test1 statistics:\n");
     print(Test1); 
-
-    destroy(Test1);
+    printf("\nMinDegree: %d\tMaxDegree: %d\tAvgDegree: %.2f\n", minDegree(Test1), maxDegree(Test1), avgDegree(Test1));
+    printDegreeHistogram(Test1);
     
-    print(Test1); 
+    Graph* Test2 = invert(Test1);
+    printf("\nTest2 statistics:\n");
+    print(Test2); 
+    printf("\nMinDegree: %d\tMaxDegree: %d\tAvgDegree: %.2f\n", minDegree(Test2), maxDegree(Test2), avgDegree(Test2));
+    printDegreeHistogram(Test2);
+        
+    /*destroy(Test1);
+    
+    print(Test1); */
 
     return 0;
 }

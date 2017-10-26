@@ -10,10 +10,18 @@ typedef struct Node {
     struct Node *next;
 } Node;
 
+struct nodeInfo;
+typedef struct nodeInfo{
+    int source;
+    int target;
+    double weight; 
+} ;
+
 struct Graph { 
     int size; 
     struct Node *index;
-};
+    struct nodeInfo *currentNode; // added for algs
+} ;
 
 Graph* create(int n){
     Graph *g;
@@ -21,6 +29,7 @@ Graph* create(int n){
     g =  (Graph*)malloc(sizeof(Graph));
     g->size = n;
     g->index = (Node*)malloc(sizeof(Node) * n);
+    g->currentNode = NULL;
     initIndex(g);
     return g;
 }
@@ -236,23 +245,58 @@ void print(Graph *g){
     }
 }
 
-       /* Node* n = createNode(target, weight);
-        Node* help = g->index[source].next;
-        Node* pHelp = &(g->index[source]); // wie kann ich hier auf g->index[source] zeigen und nicht auf das nächste element?
 
-        if(help == NULL) {
-            pHelp->next = n; 
-        } else {
-            while(help != NULL && help->nodeNumber <= target) {
-                pHelp = help;
+void initNextNode(Graph *g){
+    printf("'Initalizing getNextNode'\n");
+    int graphSize = g->size;
+    for(int i = 0; i < graphSize; i++){
+        Node* help = g->index[i].next;
+        if(help != NULL){  
+            g->currentNode->source = i;
+            g->currentNode->target = help->nodeNumber;
+            g->currentNode->weight = help->weight;
+            i = graphSize; // abort loops
+        }
+    }
+}
+
+void getNextNode(Graph *g){
+    printf("'Getting next node'\n");
+    int graphSize = g->size;
+
+    int i = g->currentNode->source;
+    Node* help = g->index[i].next;
+    while(help != NULL && help->nodeNumber < g->currentNode->target){ 
+        if(help->nodeNumber ==  g->currentNode->target){
+            if(help->next != NULL){
                 help = help->next;
+                g->currentNode->source = i;
+                g->currentNode->target = help->nodeNumber;
+                g->currentNode->weight = help->weight; 
+            } else {
+                for(int j = i; j < graphSize; j++){
+                    Node* help = g->index[j].next;
+                    if(help != NULL){  
+                        g->currentNode->source = j;
+                        g->currentNode->target = help->nodeNumber;
+                        g->currentNode->weight = help->weight;
+                        i = graphSize; // abort loops
+                    }
+                }
             }
-            if(help == NULL){
-                pHelp->next = n; 
-            } else if(help->nodeNumber == target){  //overwrite existing weight
-                help->weight = weight;        
-            } else if(help->nodeNumber < target){
-                pHelp->next = n;
-                n->next = help->next;
-            }
-        } */
+        }
+    }
+    if(help == NULL){
+        g->currentNode = NULL;
+    }
+}
+
+int edgeCounter(Graph* g, int targetNode){
+    Node* temp = &(g->index[targetNode]);
+    int counter = 0;
+    while(temp->next != NULL){
+        counter++;
+        temp = temp->next;
+    }
+    return counter;
+}

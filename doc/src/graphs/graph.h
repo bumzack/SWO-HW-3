@@ -15,4 +15,8 @@ double getWeight(Graph *g, int source, int target);
 void removeEdge(Graph *g, int source, int target);
 void print(Graph *g);
 
+void initNextNode(Graph *g);
+void getNextNode(Graph *g);
+int edgeCounter(Graph* g, int targetNode);
+
 #endif

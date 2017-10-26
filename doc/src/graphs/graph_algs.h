@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include "graph.h"
 
 struct Graph;
 typedef struct Graph Graph;
