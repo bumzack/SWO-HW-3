@@ -19,6 +19,7 @@ int main(void) {
     printf("insert edge 7\n"); insertEdge(Test1, 3, 4, 1);
     printf("insert edge 8\n"); insertEdge(Test1, 4, 5, 1);
     printf("insert edge 9\n"); insertEdge(Test1, 5, 2, 1);
+    printf("insert edge 10\n"); insertEdge(Test1, 4, 0, 3);
     printf("insert false edge\n"); insertEdge(Test1, 6, 2, 1);
     printf("finished inserting edges\n\n");    
     
@@ -32,6 +33,8 @@ int main(void) {
     print(Test1); 
 
     destroy(Test1);
+    
+    print(Test1); 
 
     return 0;
 }

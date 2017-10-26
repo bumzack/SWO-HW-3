@@ -33,9 +33,9 @@ void initIndex(Graph *g){
     }
 }
 
-void destroy(Graph *g){
+void destroy(Graph **g){
     printf("Destroying\n");
-    /* Delete all nodes */
+    /* Delete all nodes 
     for(int i = 0; i < g->size; i++){
         Node* head = &(g->index[i]);
         Node* temp = head->next;
@@ -53,12 +53,11 @@ void destroy(Graph *g){
     printf("Nodes deleted.\n");
 
     /* Delete graph */
-    /*
-    free((*g)->index);
-    (*g)->index = NULL;
-    free(g);
-    *g = NULL;
-    */
+    
+    free((*g)->index);      printf("free((*g)->index)");
+    (*g)->index = NULL;     printf("(*g)->index = NULL");
+    free(g);               printf("free g");
+    (*g) = NULL;            printf("(*g) = NULL");
 }
 
 Node* findSource(Graph *g, int source){
@@ -122,31 +121,32 @@ void insertEdge(Graph *g, int source, int target, double weight){
         Node* temp2 = head;
         
         if( temp->next == NULL){ // List is empty
-            printf("list is empty\n");
+            printf("--list is empty\n");
             temp->next = n;
         } else {
+            temp = temp->next;
             while(temp != NULL && temp->nodeNumber < target){
-                printf("nodeNumber %d\n", temp->nodeNumber);
+                printf("---nodeNumber %d\n", temp->nodeNumber);
                 temp2 = temp;
                 temp = temp->next;
             }
             if(temp == NULL){ //insert at the end;
-                printf("insert at end\n");
+                printf("--insert at end\n");
                 temp2->next = n;
             } else {
-                if(temp->nodeNumber < target && temp2 == head){ //insert at the beginning of the list
-                    printf("insert at begin\n");
+                if(temp2 == head){ //insert at the beginning of the list
+                    printf("--insert at begin\n");
                     n->next = head->next;
                     head->next = n;
-                }  
-                if(temp->nodeNumber < target){ //insert in the middle
-                    printf("insert in middle\n");
+                } else if (temp->nodeNumber < target){ //insert in the middle
+                    printf("--insert in middle\n");
                     temp2->next = n;
                     n->next = temp;
-                }
-                if (temp->nodeNumber == target){ //there is already an edge
-                    printf("overwriting\n");
+                } else if (temp->nodeNumber == target){ //there is already an edge
+                    printf("--overwriting\n");
                     temp->weight = weight;
+                } else {
+                    printf("--well, this was unexpected."); //should never be shown
                 }
             }
         }
