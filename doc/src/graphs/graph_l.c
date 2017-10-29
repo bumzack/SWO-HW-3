@@ -103,15 +103,16 @@ int valueCheck(Graph *g, int source, int target){
 
 Node* findNode(Graph *g, int source, int target){
     printf("finding Node\n");
+    
     if(valueCheck(g, source, target)){
-        Node* help = g->index[source].next;
-        // GS: entweder help == NULL bricht ab, oder nodenumber > target
-        while(help != NULL && help->nodeNumber <= target){
+        Node* help = g->index[source].next;        
+        while((help != NULL) && (help->nodeNumber < target)) {
             help = help->next;
         }
         // GS: hier kann es auch sein, dass help == NULL ist, dann hast du hier auch einen
         // segfault. 
         if((help != NULL) && (help->nodeNumber == target)) {
+            printf("finding Node NODE FOUND\n");
             return help;
         } else {
             return NULL;
