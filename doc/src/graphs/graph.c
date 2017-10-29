@@ -37,11 +37,9 @@ int main(void) {
     printf("MaxDegree: %d\n", maxDegree(Test1));
     printf("AvgDegree: %.2f\n", avgDegree(Test1));
     
-    
-    
     printDegreeHistogram(Test1);  
     
-    Graph* Test2 = invert(Test1);exit(1);
+    Graph* Test2 = invert(Test1);
     printf("\nTest2 statistics:\n");
     print(Test2); 
     printf("\nMinDegree: %d\tMaxDegree: %d\tAvgDegree: %.2f\n", minDegree(Test2), maxDegree(Test2), avgDegree(Test2));

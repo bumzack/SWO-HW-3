@@ -28,19 +28,38 @@ struct Graph {
 Graph* invert(Graph *g){
     printf("'Invert'\n");
     Graph* tempGraph = NULL;
+    
+    // und wenn du in graph.h eine Funktion getNodeCount(*g) macchst, die reutnr g->size; liefert
+    // dann kannst hier noch schreiben
+    // int n = getNodeCount(g);
+    // und brauchst überhaupt nicht mehr auf komponenten von g zgreifen
+    // wenn du getNodeCount auch für die matrix implementierst, dann 
+    // bist du völlig unabhänigig von graph_m und graph_l sondern brauchst nur 
+    // graph.h includen 
     int n = g->size;
     tempGraph = create(n);
 
-    Node *targetList; 
+    double w; 
 
-    for (int source = 0; source < n; source++) {
-        targetList = g->index[source].next;
-        while (targetList != NULL) {
-            printf("\n\n\n'invert'  found edge from source = %d to target = %d with weight = %5.2f\n", source, targetList->nodeNumber, targetList->weight);
-            insertEdge(tempGraph, targetList->nodeNumber, source, targetList->weight);
-            targetList = targetList->next;
+    for (int source = 0; source < g->size; source++) {
+        for (int target = 0; target < g->size; target++) {
+            w = getWeight(g, source, target);
+            if (w != 0.0) {
+                insertEdge(tempGraph, target, source, w);
+            } 
         }
     }
+
+    // Node *targetList; 
+
+    // for (int source = 0; source < n; source++) {
+    //     targetList = g->index[source].next;
+    //     while (targetList != NULL) {
+    //         printf("\n\n\n'invert'  found edge from source = %d to target = %d with weight = %5.2f\n", source, targetList->nodeNumber, targetList->weight);
+    //         insertEdge(tempGraph, targetList->nodeNumber, source, targetList->weight);
+    //         targetList = targetList->next;
+    //     }
+    // }
     //initIndex(tempGraph); printf("test\n");
     // initNextNode(g);
     // printf("source: %d target: %d weight: %.2f\n", g->currentNode->source, g->currentNode->target, g->currentNode->weight);
