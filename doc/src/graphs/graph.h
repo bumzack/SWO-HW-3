@@ -15,8 +15,20 @@ double getWeight(Graph *g, int source, int target);
 void removeEdge(Graph *g, int source, int target);
 void print(Graph *g);
 
-void initNextNode(Graph *g);
-void getNextNode(Graph *g);
-int edgeCounter(Graph* g, int targetNode);
+
+
+// for the functions in graph_alg.c to work
+// we need some additonal functions here
+int getSize(Graph *g);
+int getDegree(Graph *g, int n);
+
+
+// you dont want to expose Node here -> only use Graph struct 
+
+//void initNextNode(Graph *g);
+//void getNextNode(Graph *g);
+//int edgeCounter(Graph* g, int targetNode);
+
+
 
 #endif

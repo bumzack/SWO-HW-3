@@ -14,4 +14,5 @@ int maxDegree(Graph *g);
 double avgDegree(Graph *g);
 
 void printDegreeHistogram(Graph *g);
+
 #endif

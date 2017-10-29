@@ -1,82 +1,100 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <limits.h>
 
 #include "graph.h"
 #include "graph_algs.h"
 
-struct Node;
-typedef struct Node {
-    int nodeNumber;
-    double weight;
-    struct Node *next;
-} Node;
 
-struct Graph { 
-    int size; 
-    struct Node *index;
-    struct nodeInfo *currentNode; // added for algs
-};
+// only use functions to access data from the graph, don't expose
+// data structures from gaph_m or graph_l
 
+// e.g. instead of using g->size   use a function  getSize(g)
 
-Graph* invert(Graph *g){
-    Graph* tempGraph = create(g->size);
-    initIndex(tempGraph);
-    initNextNode(g);
-    while(g->currentNode != NULL){
-        insertEdge(tempGraph, g->currentNode->target, g->currentNode->source, g->currentNode->weight);
-        getNextNode(g);
-    } 
+Graph* invert(Graph *g) {
+    int n = getSize(g);
+    Graph* tempGraph = create(n);
+    double w; 
+
+    // check for all possible edges and insert only in 
+    // inverted graph if edge exists (w != 0)
+    for (int source = 0; source < n; source++) {
+        for (int target = 0; target < n; target++) {
+            w = getWeight(g, source, target);
+            if (w != 0.0) {
+                // swap source and target
+                insertEdge(tempGraph, target, source, w);
+            }
+        }
+    }
+    return tempGraph;
 }
 
-int minDegree(Graph *g){
+int minDegree(Graph *g) {
+    int n = getSize(g);
     int min = INT_MAX;
-    for(int i = 0; i < g->size; i++){
-        if (edgeCounter(g,i) < min){
-            min = edgeCounter(g,i);
+    int degree; 
+    for(int i = 0; i < n; i++){
+       degree = getDegree(g, i);
+        if (degree < min){
+            min = degree;
         }
     }
     return min;
 }
-int maxDegree(Graph *g){
+
+int maxDegree(Graph *g) {
+    int n = getSize(g);
     int max = INT_MIN;
-    for(int i = 0; i < g->size; i++){
-        if (edgeCounter(g,i) < max){
-            max = edgeCounter(g,i);
+    int degree; 
+    for(int i = 0; i < n; i++){
+       degree = getDegree(g, i);
+        if (degree > max){
+            max = degree;
         }
     }
     return max;
 }
 
 double avgDegree(Graph *g){
-    double weightSum = 0;
-    int nodeCounter = 0;
-    initNextNode(g);
-    while(g->currentNode != NULL){
-        weightSum += g->currentNode->weight;
-        nodeCounter++;
-        getNextNode(g);
+    double degreeSum = 0.0;
+    int n = getSize(g);
+
+    for (int i = 0; i < n; i++) {
+        degreeSum += getDegree(g, i);
     }
-    return (weightSum / nodeCounter);
+
+    return (degreeSum / (n+1));
 }
 
 void printDegreeHistogram(Graph *g){
-    printf("'Degree Histogram'");
-    int *grade[g->size] = {0};
-    initNextNode(g);
-    while(g->currentNode != NULL){
-        (*grade[g->currentNode->source])++;
-        getNextNode(g);
+    int n = getSize(g);
+    
+    // each node can have max (n) indegree and (n) outdegree
+    // so 2n degrees total 
+    // hmmm - can a 0->0 edge be counted twice?
+    // ask Koutschan :-)
+
+    int maxDegree = 2*n;
+    int howManyGraphnodesWithThisDegree[maxDegree+1];    // only works in C 99  , better use a dynamic array
+    int degree; 
+
+    // initialize array 
+    for (int i = 0; i <= maxDegree ; i++) {
+        howManyGraphnodesWithThisDegree[i] = 0;
     }
-    printf("\nSum:\t\t");
-    for(int i = 0; i < sizeof(grade); i++){
-        printf("%d\t", grade[i]);
+
+    // visit every node, get the degree of each node and increment the counter for this occurence of degree
+    for (int i = 0; i < n; i++) {
+        degree = getDegree(g, i);
+        // increment the occurence of this degree by 1
+        howManyGraphnodesWithThisDegree[degree]++;
     }
-    for(int i = 0; i < sizeof(grade); i++){
-        printf("----"\n);
-    }  
-    printf("\nGrades:\t\t");
-    for(int i = 0; i < sizeof(grade); i++){
-        printf("%d\t", i);
+    
+    printf("\nDegree Histogram:\n");
+    for(int i = 0; i <= maxDegree; i++){
+        // degree is i+1  as u
+        printf("degree  of %d\thave %d nodes \n", i, howManyGraphnodesWithThisDegree[i]);
     }
-    printf("\n")
+    printf("\n");
 }

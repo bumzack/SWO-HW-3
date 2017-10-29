@@ -3,44 +3,36 @@
 #include "graph_algs.h"
 
 int main(void) {
-    Graph* Test1 = NULL;
     printf("creating graph\n");
     
-    printf("address of test1 = %p  (should be null)\n", (void *)Test1);
-    Test1 = create(6);
-    printf("address of test1 = %p  (should NOT be null)\n", (void *)Test1);
+    Graph* node1FullyConnectedGraph = NULL;
+    node1FullyConnectedGraph = create(3);
 
-    printf("insert edge 1\n"); insertEdge(Test1, 0, 1, 1);
-    printf("insert edge 2\n"); insertEdge(Test1, 0, 5, 1);
-    printf("insert edge 5\n"); insertEdge(Test1, 2, 3, 5);
-    printf("insert edge 3\n"); insertEdge(Test1, 1, 2, 1);
+    // node 0 is connected to all other nodes as source
+    insertEdge(node1FullyConnectedGraph, 0, 0, 1);
+    insertEdge(node1FullyConnectedGraph, 0, 1, 2);
+    insertEdge(node1FullyConnectedGraph, 0, 2, 3);
+    // node 0 is connected to all other nodes as target
+    // 0->0 already added above 
+    insertEdge(node1FullyConnectedGraph, 1, 0, 4);
+    insertEdge(node1FullyConnectedGraph, 2, 0, 5);
 
-    printf("insert edge 4\n"); insertEdge(Test1, 1, 5, 1);
-    printf("insert edge 6\n"); insertEdge(Test1, 2, 4, 1);
-    printf("insert edge 7\n"); insertEdge(Test1, 3, 4, 1);
-    printf("insert edge 8\n"); insertEdge(Test1, 4, 5, 1);
-    printf("insert edge 9\n"); insertEdge(Test1, 5, 2, 1);
-    printf("insert edge 10\n"); insertEdge(Test1, 4, 0, 3);
-    printf("insert false edge\n"); insertEdge(Test1, 6, 2, 1);
+    // random edge 
+    insertEdge(node1FullyConnectedGraph, 1, 2, 6);
+
     printf("finished inserting edges\n\n");    
     
-    print(Test1); 
+    print(node1FullyConnectedGraph); 
+    printf("\nMinDegree: %d\tMaxDegree: %d\tAvgDegree: %.2f\n", minDegree(node1FullyConnectedGraph), maxDegree(node1FullyConnectedGraph), avgDegree(node1FullyConnectedGraph));    
+    printDegreeHistogram(node1FullyConnectedGraph);
     
-    printf("This Test should fail: "); getWeight(Test1, 5, 1);
-    printf("Remove edge from 2 to 3:\n"); removeEdge(Test1, 2, 3);
-    printf("Remove edge from 2 to 4:\n"); removeEdge(Test1, 2, 4);
-    printf("Remove edge from 6 to 2 (should create error):\n"); removeEdge(Test1, 6, 2);
-
-    printf("Test1 statistics:\n");
-    print(Test1); 
-    printf("\nMinDegree: %d\tMaxDegree: %d\tAvgDegree: %.2f\n", minDegree(Test1), maxDegree(Test1), avgDegree(Test1));
-    printDegreeHistogram(Test1);
+    Graph* invGraph = invert(node1FullyConnectedGraph);
+    printf("\nstatistics for inverted graph should be equal to the values of the original graph:\n\n\n");
     
-    Graph* Test2 = invert(Test1);
-    printf("\nTest2 statistics:\n");
-    print(Test2); 
-    printf("\nMinDegree: %d\tMaxDegree: %d\tAvgDegree: %.2f\n", minDegree(Test2), maxDegree(Test2), avgDegree(Test2));
-    printDegreeHistogram(Test2);
+    printf("\ninverted graph statistics:\n");
+    print(invGraph); 
+    printf("\nMinDegree: %d\tMaxDegree: %d\tAvgDegree: %.2f\n", minDegree(invGraph), maxDegree(invGraph), avgDegree(invGraph));
+    printDegreeHistogram(invGraph);
         
     /*destroy(Test1);
     

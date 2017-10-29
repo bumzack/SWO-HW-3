@@ -3,19 +3,19 @@
 
 #include "graph.h"
 
-struct Node;
+// struct Node;
 typedef struct Node {
     int nodeNumber;
     double weight;
     struct Node *next;
 } Node;
 
-struct nodeInfo;
+// struct nodeInfo;
 typedef struct nodeInfo{
     int source;
     int target;
     double weight; 
-} ;
+} nodeInfo;
 
 struct Graph { 
     int size; 
@@ -60,6 +60,7 @@ void destroy(Graph **g){
         }
     }
     printf("Nodes deleted.\n");
+    */
 
     /* Delete graph */
     
@@ -299,4 +300,13 @@ int edgeCounter(Graph* g, int targetNode){
         temp = temp->next;
     }
     return counter;
+}
+
+int getSize(Graph *g) {
+    return g->size;
+}
+
+int getDegree(Graph *g, int n) {
+    // ??? i dont know what to do here 
+    return -1;
 }
