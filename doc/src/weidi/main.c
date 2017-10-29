@@ -47,8 +47,9 @@ int main () {
 	// Removing an Edge
 	source = 4;
 	target = 5;
-	removeEdge(g,source,target);
+	removeEdge(&g,source,target);
 
+    printf("\nGraph after removing edge 4->5\n");
 	print(g);
 	// Testfaelle fuer AdjMatrix
 

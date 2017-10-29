@@ -61,7 +61,8 @@ void print(Graph *g)
 }
 
 static Node* createNode(int target, double weight) {
-	Node n = (Node) malloc(sizeof(Node));
+	// need a pointer to a node
+	Node *n = (Node *) malloc(sizeof(Node));
 	if(n==NULL) {
 		return NULL;
 	}
@@ -123,19 +124,21 @@ double getWeight(Graph *g,int source, int target){
 	return 0;
 }
 
-void removeEdge ( Graph *g, int source, int target) {
+
+// mit einem call by refrence geht es, call by value geht nicht ?!?!?!
+void removeEdge ( Graph **g, int source, int target) {
 	Node *temp;
 	Node *n;
 
-	if(edgeExists(g,source,target)==-1) {
-		temp=g->AdjList[source-1];
+	if(edgeExists(*g,source,target)==-1) {
+
+		temp=(*g)->AdjList[source-1];
 		if(temp->next == NULL) {
 			n=temp;
 			free(temp);
-			n=NULL;
+			// n=NULL;
 			// das würde richtig funktionieren
-			//g->AdjList[source-1]=NULL;
-
+			(*g)->AdjList[source-1]=NULL;
 		} else {
 			n=temp;
 			while(temp->target!=target) {
@@ -145,6 +148,5 @@ void removeEdge ( Graph *g, int source, int target) {
 			n->next=temp->next;
 			free(temp);
 		}
-
 	}
 }
