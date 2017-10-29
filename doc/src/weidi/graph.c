@@ -22,7 +22,11 @@ struct Graph {
 	int n;
 };
 
-
+void FillMatrix(Graph *g) {
+	for(int i=0;i < g->n;i++) {
+			g->AdjList[i]=NULL;
+	}
+}
 
 Graph* create(int n) {
 	// < statt <= MAX_VERT 
@@ -36,12 +40,6 @@ Graph* create(int n) {
 	}
 	else {
 		return NULL;
-	}
-}
-
-void FillMatrix(Graph *g) {
-	for(int i=0;i < g->n;i++) {
-			g->AdjList[i]=NULL;
 	}
 }
 
