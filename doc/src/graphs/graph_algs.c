@@ -11,28 +11,41 @@ typedef struct Node {
     struct Node *next;
 } Node;
 
+struct nodeInfo;
+typedef struct nodeInfo{
+    int source;
+    int target;
+    double weight; 
+} nodeInfo;
+
 struct Graph { 
     int size; 
     struct Node *index;
     struct nodeInfo *currentNode; // added for algs
-};
-
+} ;
 
 Graph* invert(Graph *g){
-    Graph* tempGraph = create(g->size);
-    initIndex(tempGraph);
+    printf("'Invert'\n");
+    Graph* tempGraph = NULL;
+    int n = g->size;
+    tempGraph = create(n);
+    //initIndex(tempGraph); printf("test\n");
     initNextNode(g);
+    printf("source: %d target: %d weight: %.2f\n", g->currentNode->source, g->currentNode->target, g->currentNode->weight);
     while(g->currentNode != NULL){
         insertEdge(tempGraph, g->currentNode->target, g->currentNode->source, g->currentNode->weight);
         getNextNode(g);
-    } 
+        printf("source: %d target: %d weight: %.2f\n", g->currentNode->source, g->currentNode->target, g->currentNode->weight);
+    }
+    return tempGraph;
 }
 
 int minDegree(Graph *g){
     int min = INT_MAX;
     for(int i = 0; i < g->size; i++){
-        if (edgeCounter(g,i) < min){
-            min = edgeCounter(g,i);
+        int degree = edgeCounter(g, i);
+        if (degree < min) {
+            min = degree;
         }
     }
     return min;
@@ -40,43 +53,40 @@ int minDegree(Graph *g){
 int maxDegree(Graph *g){
     int max = INT_MIN;
     for(int i = 0; i < g->size; i++){
-        if (edgeCounter(g,i) < max){
-            max = edgeCounter(g,i);
+        int degree = edgeCounter(g, i);
+        if (degree > max) {
+            max = degree;
         }
     }
     return max;
 }
 
 double avgDegree(Graph *g){
-    double weightSum = 0;
-    int nodeCounter = 0;
-    initNextNode(g);
-    while(g->currentNode != NULL){
-        weightSum += g->currentNode->weight;
-        nodeCounter++;
-        getNextNode(g);
+    double degreeSum = 0;
+    for(int i = 0; i < g->size; i++){
+        degreeSum += edgeCounter(g, i);
     }
-    return (weightSum / nodeCounter);
+    return (degreeSum / g->size);
 }
 
 void printDegreeHistogram(Graph *g){
     printf("'Degree Histogram'");
-    int *grade[g->size] = {0};
-    initNextNode(g);
-    while(g->currentNode != NULL){
-        (*grade[g->currentNode->source])++;
-        getNextNode(g);
+    int gradeSize = g->size;
+    int grade[gradeSize];
+    for(int i = 0; i < gradeSize; i++){
+        grade[i] = 0;
     }
-    printf("\nSum:\t\t");
-    for(int i = 0; i < sizeof(grade); i++){
+    for(int i = 0; i < g->size; i++){
+        grade[i] = edgeCounter(g, i);
+    }
+
+    printf("\nSum:\t");
+    for(int i = 0; i < gradeSize; i++){
         printf("%d\t", grade[i]);
     }
-    for(int i = 0; i < sizeof(grade); i++){
-        printf("----"\n);
-    }  
-    printf("\nGrades:\t\t");
-    for(int i = 0; i < sizeof(grade); i++){
+    printf("\nGrades:\t");
+    for(int i = 0; i < gradeSize; i++){
         printf("%d\t", i);
     }
-    printf("\n")
+    printf("\n");
 }

@@ -1,3 +1,4 @@
-graph.o: graph.c graph.h
+graph_algs.o: graph_algs.c graph.h graph_algs.h
+graph.o: graph.c graph.h graph_algs.h
 graph_l.o: graph_l.c graph.h
 graph_m.o: graph_m.c

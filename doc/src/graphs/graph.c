@@ -10,7 +10,7 @@ int main(void) {
     Test1 = create(6);
     printf("address of test1 = %p  (should NOT be null)\n", (void *)Test1);
 
-    printf("insert edge 1\n"); insertEdge(Test1, 0, 1, 1);
+    printf("insert edge 1\n"); insertEdge(Test1, 0, 1, 10);
     printf("insert edge 2\n"); insertEdge(Test1, 0, 5, 1);
     printf("insert edge 5\n"); insertEdge(Test1, 2, 3, 5);
     printf("insert edge 3\n"); insertEdge(Test1, 1, 2, 1);
@@ -19,7 +19,7 @@ int main(void) {
     printf("insert edge 6\n"); insertEdge(Test1, 2, 4, 1);
     printf("insert edge 7\n"); insertEdge(Test1, 3, 4, 1);
     printf("insert edge 8\n"); insertEdge(Test1, 4, 5, 1);
-    printf("insert edge 9\n"); insertEdge(Test1, 5, 2, 1);
+    printf("insert edge 9\n"); insertEdge(Test1, 5, 2, 90);
     printf("insert edge 10\n"); insertEdge(Test1, 4, 0, 3);
     printf("insert false edge\n"); insertEdge(Test1, 6, 2, 1);
     printf("finished inserting edges\n\n");    
@@ -33,10 +33,15 @@ int main(void) {
 
     printf("Test1 statistics:\n");
     print(Test1); 
-    printf("\nMinDegree: %d\tMaxDegree: %d\tAvgDegree: %.2f\n", minDegree(Test1), maxDegree(Test1), avgDegree(Test1));
-    printDegreeHistogram(Test1);
+    printf("MinDegree: %d\n", minDegree(Test1));
+    printf("MaxDegree: %d\n", maxDegree(Test1));
+    printf("AvgDegree: %.2f\n", avgDegree(Test1));
     
-    Graph* Test2 = invert(Test1);
+    
+    
+    printDegreeHistogram(Test1);  
+    
+    Graph* Test2 = invert(Test1);exit(1);
     printf("\nTest2 statistics:\n");
     print(Test2); 
     printf("\nMinDegree: %d\tMaxDegree: %d\tAvgDegree: %.2f\n", minDegree(Test2), maxDegree(Test2), avgDegree(Test2));

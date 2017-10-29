@@ -15,7 +15,7 @@ typedef struct nodeInfo{
     int source;
     int target;
     double weight; 
-} ;
+} nodeInfo;
 
 struct Graph { 
     int size; 
@@ -249,45 +249,59 @@ void print(Graph *g){
 void initNextNode(Graph *g){
     printf("'Initalizing getNextNode'\n");
     int graphSize = g->size;
+    g->currentNode = (nodeInfo*)malloc(sizeof(nodeInfo));
+    g->currentNode->source = 0;
+    g->currentNode->target = 0;  
+    g->currentNode->weight = 0;
+    
     for(int i = 0; i < graphSize; i++){
-        Node* help = g->index[i].next;
+        Node* help = g->index[i].next; 
         if(help != NULL){  
+            //printf("test %d\n", help->nodeNumber);
             g->currentNode->source = i;
-            g->currentNode->target = help->nodeNumber;
+            g->currentNode->target = help->nodeNumber; 
             g->currentNode->weight = help->weight;
             i = graphSize; // abort loops
         }
     }
+    
 }
 
 void getNextNode(Graph *g){
     printf("'Getting next node'\n");
     int graphSize = g->size;
+    int s = g->currentNode->source;
+    int t = g->currentNode->target;
+    Node* help = g->index[s].next;
 
-    int i = g->currentNode->source;
-    Node* help = g->index[i].next;
-    while(help != NULL && help->nodeNumber < g->currentNode->target){ 
-        if(help->nodeNumber ==  g->currentNode->target){
+    printf("nodeNumber %d\n", help->nodeNumber);
+    printf("weight %.0f\n", help->weight);
+    printf("s is %d\t t is %d\n", s, t);
+
+    while(help != NULL && help->nodeNumber <= t){ 
+        printf("gnn\n");
+        if(help->nodeNumber ==  t){
             if(help->next != NULL){
+                printf("gnn while--if--if\n");
                 help = help->next;
-                g->currentNode->source = i;
+                g->currentNode->source = s;
                 g->currentNode->target = help->nodeNumber;
-                g->currentNode->weight = help->weight; 
+                g->currentNode->weight = help->weight;
             } else {
-                for(int j = i; j < graphSize; j++){
+                printf("gnn while--if--else\n");
+                for(int j = s; j < graphSize; j++){
                     Node* help = g->index[j].next;
                     if(help != NULL){  
                         g->currentNode->source = j;
                         g->currentNode->target = help->nodeNumber;
                         g->currentNode->weight = help->weight;
-                        i = graphSize; // abort loops
+                        s = graphSize; // abort loops
                     }
                 }
             }
-        }
-    }
-    if(help == NULL){
-        g->currentNode = NULL;
+        } 
+        printf("nodeNumber %d  weight %.0f\n", help->nodeNumber, help->weight);
+        printf("source: %d target: %d weight: %.2f\n", g->currentNode->source, g->currentNode->target, g->currentNode->weight);
     }
 }
 

@@ -7,7 +7,7 @@
 
 struct Graph;
 typedef struct Graph Graph;
- 
+
 Graph* invert(Graph *g);
 int minDegree(Graph *g);
 int maxDegree(Graph *g);
