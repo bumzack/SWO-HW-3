@@ -65,18 +65,27 @@ int getSize(Graph *g) {
 int getDegree(Graph *g, int n) {
     int sumDegree = 0;
 
+    // TODO - thats not really correct
+    // this would count an edge n -> n twice !!!
+
     // count the outdegrees - n is the source node, so check every other node if weight is != 0 
-    for (int target = 0; target < g->size; target++)  {
+    for (int target = 0; target < g->size; target++) {
+        // TODO; if (n != target)
         if (getWeight(g, n, target) != 0.0) {
             sumDegree++;
         }
     }
 
     // count the in degrees - n is the target node, ... {
-    for (int source = 0; source < g->size; source++)  {
+    for (int source = 0; source < g->size; source++) {
+        // TODO; if (n != source)
+
         if (getWeight(g, source, n) != 0.0) {
             sumDegree++;
         }
     }
+
+    // TODO if getWeight(g, n, n) -> inc sumDegree
+    
     return sumDegree;
 }
