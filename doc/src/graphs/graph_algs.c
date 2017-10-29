@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <limits.h>
 
 #include "graph.h"
 #include "graph_algs.h"
@@ -29,14 +30,27 @@ Graph* invert(Graph *g){
     Graph* tempGraph = NULL;
     int n = g->size;
     tempGraph = create(n);
-    //initIndex(tempGraph); printf("test\n");
-    initNextNode(g);
-    printf("source: %d target: %d weight: %.2f\n", g->currentNode->source, g->currentNode->target, g->currentNode->weight);
-    while(g->currentNode != NULL){
-        insertEdge(tempGraph, g->currentNode->target, g->currentNode->source, g->currentNode->weight);
-        getNextNode(g);
-        printf("source: %d target: %d weight: %.2f\n", g->currentNode->source, g->currentNode->target, g->currentNode->weight);
+
+    Node *targetList; 
+
+    for (int source = 0; source < n; source++) {
+        targetList = g->index[source].next;
+        while (targetList != NULL) {
+            printf("\n\n\n'invert'  found edge from source = %d to target = %d with weight = %5.2f\n", source, targetList->nodeNumber, targetList->weight);
+            insertEdge(tempGraph, targetList->nodeNumber, source, targetList->weight);
+            targetList = targetList->next;
+        }
     }
+    //initIndex(tempGraph); printf("test\n");
+    // initNextNode(g);
+    // printf("source: %d target: %d weight: %.2f\n", g->currentNode->source, g->currentNode->target, g->currentNode->weight);
+    // while(g->currentNode != NULL){
+    //     printf("\n\n\n'invert'  address of g->currentNode = %p\n", (void*)g->currentNode);
+    //     insertEdge(tempGraph, g->currentNode->target, g->currentNode->source, g->currentNode->weight);
+    //     getNextNode(g);
+    //     printf("\n\n\n'invert' AFTER getNExtNode address of g->currentNode = %p\n\n\n", (void*)g->currentNode);
+    //     printf("source: %d target: %d weight: %.2f\n", g->currentNode->source, g->currentNode->target, g->currentNode->weight);
+    // }
     return tempGraph;
 }
 

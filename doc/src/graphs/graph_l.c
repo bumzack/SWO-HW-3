@@ -105,10 +105,13 @@ Node* findNode(Graph *g, int source, int target){
     printf("finding Node\n");
     if(valueCheck(g, source, target)){
         Node* help = g->index[source].next;
+        // GS: entweder help == NULL bricht ab, oder nodenumber > target
         while(help != NULL && help->nodeNumber <= target){
             help = help->next;
         }
-        if(help->nodeNumber == target){
+        // GS: hier kann es auch sein, dass help == NULL ist, dann hast du hier auch einen
+        // segfault. 
+        if((help != NULL) && (help->nodeNumber == target)) {
             return help;
         } else {
             return NULL;
@@ -211,6 +214,10 @@ void removeEdge(Graph *g, int source, int target){
                     free(temp);
                 }
                 if (temp->nodeNumber == target){ //remove the node
+                    // GS: das printf sagt overwriting, du lscht aber den knoten
+                    // und der code ist ident zum IF darüber
+                    // entweder stimmt der text im  printf nicht, oder 
+                    // du kannst diese IF sparen und machst oben <= target
                     printf("overwriting\n");
                     temp2->next = temp->next;
                     temp->next = NULL;
@@ -247,29 +254,42 @@ void print(Graph *g){
 
 
 void initNextNode(Graph *g){
-    printf("'Initalizing getNextNode'\n");
+    printf("'Initalizing initNextNode'\n");
     int graphSize = g->size;
+
+    // GS: hmm - currentNode wird hier bei jedem Aufruf von
+    // InitNextNode allokiert, aber nie frei gegeben
+    // also du hast hier ein memory leak
+    // uU würde eine Zuweisung unten im IF   g->currentNode = help; 
+    // reichen?, aber dazu verstehe ich den code zuwenig
+        
     g->currentNode = (nodeInfo*)malloc(sizeof(nodeInfo));
     g->currentNode->source = 0;
     g->currentNode->target = 0;  
     g->currentNode->weight = 0;
     
+    printf("\n\n\n'starting for loop'\n");
+    
     for(int i = 0; i < graphSize; i++){
         Node* help = g->index[i].next; 
+        printf("i = %d\n",i);
         if(help != NULL){  
-            //printf("test %d\n", help->nodeNumber);
+            printf("test %d\n", help->nodeNumber);
             g->currentNode->source = i;
             g->currentNode->target = help->nodeNumber; 
             g->currentNode->weight = help->weight;
+            //g->currentNode = help;
+    
             i = graphSize; // abort loops
         }
     }
-    
+    printf("'END of  initNextNode'\n");
 }
 
 void getNextNode(Graph *g){
     printf("'Getting next node'\n");
     int graphSize = g->size;
+    printf("g->currentNode-> source = %d, g->currentNode->target = %d, g->currentNode = %p\n", g->currentNode->source, g->currentNode->target, (void *) g->currentNode);
     int s = g->currentNode->source;
     int t = g->currentNode->target;
     Node* help = g->index[s].next;
@@ -303,6 +323,7 @@ void getNextNode(Graph *g){
         printf("nodeNumber %d  weight %.0f\n", help->nodeNumber, help->weight);
         printf("source: %d target: %d weight: %.2f\n", g->currentNode->source, g->currentNode->target, g->currentNode->weight);
     }
+    printf("'END of  getNextNode'\n");
 }
 
 int edgeCounter(Graph* g, int targetNode){
