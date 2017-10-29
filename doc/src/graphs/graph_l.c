@@ -307,6 +307,6 @@ int getSize(Graph *g) {
 }
 
 int getDegree(Graph *g, int n) {
-    // ??? i dont know what to do here 
-    return -1;
+    // maybe rename edgeCounter to getDegree and delete this 3 lines
+    return edgeCounter(g, n);
 }
