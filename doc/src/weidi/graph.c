@@ -6,6 +6,8 @@
 
 #define FILENAME AdjListFile "graph.h"
 
+#define MAX_VERT 100
+
 typedef struct Graph Graph;
 
 typedef struct Node {
@@ -22,10 +24,12 @@ struct Graph {
 
 
 
-Graph* create(int n){
-	if(n<=MAX_VERT) {
+Graph* create(int n) {
+	// < statt <= MAX_VERT 
+	if(n<MAX_VERT) {
 		Graph *g;
-		g= (Graph*)malloc(sizeof(Node)*n);
+		// hier sizeof(Graph) statt sizeof(Node)
+		g= (Graph*)malloc(sizeof(Graph)*n);
 		g->n=n;
 		FillMatrix(g);
 		return g;
